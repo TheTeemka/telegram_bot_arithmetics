@@ -1,6 +1,7 @@
 package main
 
 import (
+	"log"
 	"log/slog"
 	"os"
 	"strings"
@@ -27,14 +28,14 @@ func setSlog(logLevel string) {
 	switch strings.ToLower(logLevel) {
 	case "debug":
 		level = slog.LevelDebug
-	case "info":
+	case "info", "":
 		level = slog.LevelInfo
 	case "warn":
 		level = slog.LevelWarn
 	case "error":
 		level = slog.LevelError
 	default:
-		panic("Invalid log level: " + logLevel)
+		log.Fatal("Invalid log level: " + logLevel)
 	}
 
 	logger := slog.New(slog.NewJSONHandler(os.Stdout, &slog.HandlerOptions{Level: level}))

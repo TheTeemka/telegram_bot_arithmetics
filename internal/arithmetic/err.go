@@ -12,7 +12,6 @@ func (a *arError) Error() string {
 func NewarError(whatExpected string, place int, text []byte) error {
 	return &arError{
 		place: place,
-		msg: "Error: " + whatExpected + "\n" +
-			string(text[:place-1]) + "[Here]" + string(text[place-1:]),
+		msg:   " ❌ ERROR: " + whatExpected + "\n" + string(text[:place-1]) + "[❗️Here]" + string(text[place-1:]),
 	}
 }
