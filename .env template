@@ -1,3 +1,3 @@
-LOG_LEVEL=
-TELEGRAM_BOT_TOKEN=
-NumWorkers=
+LOG_LEVEL= #e.g., DEBUG, INFO, WARNING, ERROR
+TELEGRAM_BOT_TOKEN= # Your Telegram Bot Token
+NumWorkers= # Number of worker threads for processing messages
