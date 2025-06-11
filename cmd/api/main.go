@@ -15,7 +15,7 @@ func main() {
 
 	setSlog(cfg.LogLevel)
 
-	bot, err := telegram.NewBot(cfg.TelegramBotToken)
+	bot, err := telegram.NewBot(cfg.TelegramBotToken, cfg.NumWorkers)
 	if err != nil {
 		slog.Error("Failed to create bot", "error", err)
 	}

@@ -10,17 +10,21 @@ import (
 )
 
 type TelegramBot struct {
-	BotAPI *tapi.BotAPI
+	BotAPI     *tapi.BotAPI
+	NumWorkers int
 }
 
-func NewBot(token string) (*TelegramBot, error) {
+func NewBot(token string, numWorkes int) (*TelegramBot, error) {
 	bot, err := tapi.NewBotAPI(token)
 	if err != nil {
 		return nil, err
 	}
 
 	slog.Info("Telegram Bot started", "bot_name", bot.Self.UserName, "bot_id", bot.Self.ID)
-	return &TelegramBot{BotAPI: bot}, nil
+	return &TelegramBot{
+		BotAPI:     bot,
+		NumWorkers: numWorkes,
+	}, nil
 }
 
 func (b *TelegramBot) Start() {
@@ -28,7 +32,14 @@ func (b *TelegramBot) Start() {
 	updateConfig.Timeout = 60
 
 	updates := b.BotAPI.GetUpdatesChan(updateConfig)
+	for i := 0; i < b.NumWorkers; i++ {
+		go b.worker(updates)
+	}
 
+	select {}
+}
+
+func (b *TelegramBot) worker(updates tapi.UpdatesChannel) {
 	for update := range updates {
 		if update.Message == nil {
 			continue
@@ -39,7 +50,6 @@ func (b *TelegramBot) Start() {
 		} else {
 			b.HandleText(update.Message.Text, update.Message.Chat.ID)
 		}
-
 	}
 }
 
